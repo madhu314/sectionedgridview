@@ -16,10 +16,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class SectionedGridViewAdapter extends BaseAdapter {
+public class SectionedGridViewAdapter extends BaseAdapter implements
+		View.OnClickListener {
 
 	private static final String TAG = "SectionedGridViewAdapter";
 	private SparseBooleanArray idAnimations = new SparseBooleanArray();
@@ -44,6 +46,12 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 	public static final int VIEW_TYPE_ROW = 1;
 
 	public static final int MIN_SPACING = 10;
+
+	public static interface OnGridItemClickListener {
+		public void onGridItemClicked(String sectionName, int position, View v);
+	}
+
+	private OnGridItemClickListener listener = null;
 
 	public SectionedGridViewAdapter(Context context,
 			LinkedHashMap<String, Cursor> sectionCursors, int listItemRowSize,
@@ -97,7 +105,6 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 		}
 
 		this.mContext = context;
-		Log.d(TAG, "Computed number of children in row");
 
 	}
 
@@ -235,33 +242,42 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 			// check if this position corresponds to last row
 			boolean isLastRowInSection = isLastRowInSection(position);
 			int positionInSection = positionInSection(position);
-						
+
 			Cursor c = sectionCursors.get(sectionName);
-			
-			//--
+
+			// --
 			int cursorStartAt = numberOfChildrenInRow * positionInSection;
-			
+
 			// set all children visible first
 			for (int i = 0; i < 2 * numberOfChildrenInRow - 1; i++) {
 				// we need to hide grid item and gap
 				View child = rowPanel.getChildAt(i);
 				child.setVisibility(View.VISIBLE);
-				
-				//leave alternate
-				if(i%2 == 0) {
-					//its a gap
-					if(c.moveToPosition(cursorStartAt)) {
+
+				// leave alternate
+				if (i % 2 == 0) {
+					// its not gap
+					if (c.moveToPosition(cursorStartAt)) {
 						String dataName = c.getString(0);
-						TextView tv = (TextView) child.findViewById(R.id.data_item_text);
+						TextView tv = (TextView) child
+								.findViewById(R.id.data_item_text);
 						tv.setText(dataName);
-						cursorStartAt++;
 					}
+
+					// set listener on image button
+					ImageButton button = (ImageButton) child
+							.findViewById(R.id.data_item_image);
+					ButtonViewHolder holder = new ButtonViewHolder();
+					holder.sectionName = sectionName;
+					holder.positionInSection = cursorStartAt;
+					holder.parent = child;
+					button.setTag(holder);
+					button.setOnClickListener(this);
+					cursorStartAt++;
+
 				}
 			}
 
-			
-		
-			
 			if (isLastRowInSection) {
 				// check how many items needs to be hidden in last row
 				int sectionCount = sectionCursors.get(sectionName).getCount();
@@ -283,21 +299,21 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 
 		}
 
-		// boolean animated = idAnimations.get(position);
-		// if (!animated) {
-		// Animation existingAnim = v.getAnimation();
-		// idAnimations.put(position, true);
-		//
-		// if (existingAnim != null && existingAnim.hasStarted()
-		// && !existingAnim.hasEnded()) {
-		// // already animating leave it
-		// existingAnim.cancel();
-		// } else {
-		// Animation a = AnimationUtils.loadAnimation(mContext,
-		// android.R.anim.fade_in);
-		// v.startAnimation(a);
-		// }
-		// }
+		boolean animated = idAnimations.get(position);
+		if (!animated) {
+			Animation existingAnim = v.getAnimation();
+			idAnimations.put(position, true);
+
+			if (existingAnim != null && existingAnim.hasStarted()
+					&& !existingAnim.hasEnded()) {
+				// already animating leave it
+				existingAnim.cancel();
+			} else {
+				Animation a = AnimationUtils.loadAnimation(mContext,
+						R.anim.slide_up_without_rotation);
+				v.startAnimation(a);
+			}
+		}
 		return v;
 	}
 
@@ -378,12 +394,12 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-//		if (isSectionHeader(position)) {
-//			return false;
-//		}
-//
-//		return true;
-		
+		// if (isSectionHeader(position)) {
+		// return false;
+		// }
+		//
+		// return true;
+
 		return false;
 
 	}
@@ -391,5 +407,28 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 	public int gapBetweenChildrenInRow() {
 		return childSpacing;
 	}
+
+	public void setListener(OnGridItemClickListener listener) {
+		this.listener = listener;
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		ButtonViewHolder holder = (ButtonViewHolder) v.getTag();
+		if (this.listener != null) {
+			listener.onGridItemClicked(holder.sectionName,
+					holder.positionInSection, holder.parent);
+		}
+	}
+
+	public static class ButtonViewHolder {
+		String sectionName;
+		int positionInSection;
+		View parent;
+	}
+
+	// TODO -- cleaning view and click listners and making sure context aint
+	// leaked
 
 }
