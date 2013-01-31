@@ -378,11 +378,13 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (isSectionHeader(position)) {
-			return false;
-		}
-
-		return true;
+//		if (isSectionHeader(position)) {
+//			return false;
+//		}
+//
+//		return true;
+		
+		return false;
 
 	}
 

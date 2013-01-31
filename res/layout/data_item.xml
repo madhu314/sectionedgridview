@@ -3,18 +3,19 @@
     android:layout_width="@dimen/grid_item_size"
     android:layout_height="@dimen/grid_item_size"
     android:orientation="vertical"
-    
     android:gravity="center">
 
-    <ImageView
+    <ImageButton
         android:layout_marginTop="@dimen/grid_item_margin_size"
         android:id="@+id/data_item_image"
         android:layout_gravity="center"
         android:layout_width="@dimen/grid_item_icon_size"
         android:layout_height="@dimen/grid_item_icon_size"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_launcher" >
-    </ImageView>
+        android:src="@drawable/ic_launcher" 
+        android:background="@drawable/grid_item_selector"
+        >
+    </ImageButton>
 
     <TextView
         android:id="@+id/data_item_text"
