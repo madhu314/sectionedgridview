@@ -232,22 +232,42 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 			tv.setText(sectionName);
 		} else {
 			rowPanel = (LinearLayout) v;
-			//set all children visible first
-			for (int i = 0; i < 2*numberOfChildrenInRow - 1 ; i++) {
+			// check if this position corresponds to last row
+			boolean isLastRowInSection = isLastRowInSection(position);
+			int positionInSection = positionInSection(position);
+						
+			Cursor c = sectionCursors.get(sectionName);
+			
+			//--
+			int cursorStartAt = numberOfChildrenInRow * positionInSection;
+			
+			// set all children visible first
+			for (int i = 0; i < 2 * numberOfChildrenInRow - 1; i++) {
 				// we need to hide grid item and gap
 				View child = rowPanel.getChildAt(i);
 				child.setVisibility(View.VISIBLE);
+				
+				//leave alternate
+				if(i%2 == 0) {
+					//its a gap
+					if(c.moveToPosition(cursorStartAt)) {
+						String dataName = c.getString(0);
+						TextView tv = (TextView) child.findViewById(R.id.data_item_text);
+						tv.setText(dataName);
+						cursorStartAt++;
+					}
+				}
 			}
-			
-			// check if this position corresponds to last row
-			boolean isLastRowInSection = isLastRowInSection(position);
 
+			
+		
+			
 			if (isLastRowInSection) {
 				// check how many items needs to be hidden in last row
 				int sectionCount = sectionCursors.get(sectionName).getCount();
 
 				int childrenInLastRow = sectionCount % numberOfChildrenInRow;
-				
+
 				if (childrenInLastRow > 0) {
 					int gaps = childrenInLastRow - 1;
 
@@ -263,21 +283,21 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 
 		}
 
-//		boolean animated = idAnimations.get(position);
-//		if (!animated) {
-//			Animation existingAnim = v.getAnimation();
-//			idAnimations.put(position, true);
-//
-//			if (existingAnim != null && existingAnim.hasStarted()
-//					&& !existingAnim.hasEnded()) {
-//				// already animating leave it
-//				existingAnim.cancel();
-//			} else {
-//				Animation a = AnimationUtils.loadAnimation(mContext,
-//						android.R.anim.fade_in);
-//				v.startAnimation(a);
-//			}
-//		}
+		// boolean animated = idAnimations.get(position);
+		// if (!animated) {
+		// Animation existingAnim = v.getAnimation();
+		// idAnimations.put(position, true);
+		//
+		// if (existingAnim != null && existingAnim.hasStarted()
+		// && !existingAnim.hasEnded()) {
+		// // already animating leave it
+		// existingAnim.cancel();
+		// } else {
+		// Animation a = AnimationUtils.loadAnimation(mContext,
+		// android.R.anim.fade_in);
+		// v.startAnimation(a);
+		// }
+		// }
 		return v;
 	}
 
@@ -323,6 +343,22 @@ public class SectionedGridViewAdapter extends BaseAdapter {
 		}
 
 		return null;
+
+	}
+
+	private int positionInSection(int position) {
+
+		for (String key : sectionCursors.keySet()) {
+			int size = sectionRowsCount.get(key) + 1;
+
+			if (position < size) {
+				return position - 1;
+			}
+
+			position -= size;
+		}
+
+		return -1;
 
 	}
 

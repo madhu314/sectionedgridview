@@ -32,11 +32,10 @@ public class Dataset {
 		if( cursor == null) {
 			cursor = new MatrixCursor(COLUMNS);
 			int items = sectionItems.get(sectionName);
-			cursor.addRow(new Object[] {sectionName, INDEX++ });
 
 			// now add item rows
-			for (int i = 1; i < items; i++) {
-				cursor.addRow(new Object[] { ITEM_PREFIX + i, INDEX++ });
+			for (int i = 0; i < items; i++) {
+				cursor.addRow(new Object[] { sectionName + i , INDEX++ });
 			}
 			
 			sectionCursors.put(sectionName, cursor);

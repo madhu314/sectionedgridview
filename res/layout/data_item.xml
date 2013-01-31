@@ -3,7 +3,7 @@
     android:layout_width="@dimen/grid_item_size"
     android:layout_height="@dimen/grid_item_size"
     android:orientation="vertical"
-    android:background="#ABA" 
+    
     android:gravity="center">
 
     <ImageView
@@ -19,11 +19,12 @@
     <TextView
         android:id="@+id/data_item_text"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/grid_item_text_size"
+        android:layout_height="@dimen/grid_item_text_view_size"
         android:layout_marginTop="@dimen/grid_item_margin_size"
-        android:maxLines="1"
+        android:maxLines="2"
         android:ellipsize="end"
-        android:text="Browser"
+        android:gravity="center"
+        android:text="Browser with 2 lines"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>
