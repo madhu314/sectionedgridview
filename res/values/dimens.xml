@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="grid_item_size">72dp</dimen>
+    <dimen name="grid_item_icon_size">48dp</dimen>
+    <dimen name="grid_item_text_size">20dp</dimen>
+    <dimen name="grid_item_margin_size">2dp</dimen>
+</resources>
