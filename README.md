@@ -1,1 +1,1 @@
-Demonstrates customization of listadapter to emulate a sectioned gridview in Android
+Demonstrates customization of base adapter to emulate a sectioned gridview in Android
