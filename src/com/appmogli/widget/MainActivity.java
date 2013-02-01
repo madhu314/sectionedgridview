@@ -34,8 +34,8 @@ public class MainActivity extends Activity implements OnGridItemClickListener {
 		String sectionTwo = "SectionTwo";
 		String sectionThree = "SectionThree";
 
-		dataSet.addSection(sectionOne, 10);
-		dataSet.addSection(sectionTwo, 5);
+		dataSet.addSection(sectionOne, 5);
+		dataSet.addSection(sectionTwo, 7);
 		dataSet.addSection(sectionThree, 18);
 
 		cursorMap = dataSet.getSectionCursorMap();
