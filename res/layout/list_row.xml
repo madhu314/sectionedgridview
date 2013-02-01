@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	   android:orientation="vertical"
+	    android:layout_height="@dimen/grid_item_full_size"
+	    android:layout_width="match_parent"
+	    android:id="@+id/row_item_panel">
+
+    <LinearLayout 
 	   android:orientation="horizontal"
 	    android:layout_height="@dimen/grid_item_size"
 	    android:layout_width="match_parent"
 	    android:id="@+id/row_item"
 	    >
-
-    
+	   </LinearLayout>
+	   <View 
+	       android:background="#D8D8D8"
+	       android:paddingTop="1dp"
+	       android:layout_height="@dimen/grid_item_bottom_line_size"
+	       android:layout_width="match_parent"
+	       android:id="@+id/row_item_divider"/>
 </LinearLayout>

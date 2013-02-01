@@ -4,4 +4,6 @@
     <dimen name="grid_item_icon_size">48dp</dimen>
     <dimen name="grid_item_text_view_size">36dp</dimen>
     <dimen name="grid_item_margin_size">2dp</dimen>
+    <dimen name="grid_item_full_size">90dp</dimen>
+    <dimen name="grid_item_bottom_line_size">2dp</dimen>
 </resources>

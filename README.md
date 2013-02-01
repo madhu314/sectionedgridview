@@ -1,0 +1,1 @@
+Demonstrates customization of listadapter to emulate a sectioned gridview in Android

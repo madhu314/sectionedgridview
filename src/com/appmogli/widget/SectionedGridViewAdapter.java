@@ -1,14 +1,9 @@
 package com.appmogli.widget;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,57 +103,6 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 
 	}
 
-	// @Override
-	// public void bindView(View view, Context context, Cursor cursor) {
-	// int type = cursor.getInt(0);
-	// String data = cursor.getString(1);
-	// ViewHolder holder = (ViewHolder) view.getTag();
-	// holder.dataView.setVisibility(View.GONE);
-	// holder.sectionHeader.setVisibility(View.GONE);
-	//
-	// if (type == Dataset.TYPE_SECTION) {
-	// holder.sectionHeader.setVisibility(View.VISIBLE);
-	// holder.sectionHeader.setText(data);
-	// } else {
-	// holder.dataView.setVisibility(View.VISIBLE);
-	// }
-	// holder.position = cursor.getPosition();
-	//
-	// // now do new view item animations
-	//
-	// boolean animated = idAnimations.get(holder.position);
-	// if (!animated) {
-	// Animation existingAnim = view.getAnimation();
-	// idAnimations.put(holder.position, true);
-	//
-	// if (existingAnim != null && existingAnim.hasStarted()
-	// && !existingAnim.hasEnded()) {
-	// // already animating leave it
-	// existingAnim.cancel();
-	// } else {
-	// Animation a = AnimationUtils.loadAnimation(context,
-	// R.anim.slide_up_left);
-	// view.startAnimation(a);
-	// }
-	//
-	// }
-	//
-	// }
-	//
-	// @Override
-	// public View newView(Context context, Cursor cursor, ViewGroup parent) {
-	// LayoutInflater inflater = (LayoutInflater) context
-	// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// View v = null;
-	// v = inflater.inflate(R.layout.list_item, null);
-	// ViewHolder holder = new ViewHolder();
-	// holder.dataView = (LinearLayout) v.findViewById(R.id.data_item);
-	// holder.sectionHeader = (TextView) v.findViewById(R.id.section_item);
-	// holder.position = cursor.getPosition();
-	// v.setTag(holder);
-	// return v;
-	// }
-
 	@Override
 	public int getCount() {
 
@@ -199,7 +143,6 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = null;
 		boolean isSectionheader = isSectionHeader(position);
-		LinearLayout rowPanel = null;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) mContext
@@ -210,6 +153,8 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 			} else {
 				LinearLayout ll = (LinearLayout) inflater.inflate(
 						R.layout.list_row, null);
+				v = ll;
+				ll = (LinearLayout) ll.findViewById(R.id.row_item);
 				// add childrenCount to this
 				for (int i = 0; i < numberOfChildrenInRow; i++) {
 					// add a child
@@ -224,8 +169,7 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 								childrenSpacing[i], ll.getHeight()));
 					}
 				}
-				v = ll;
-				rowPanel = ll;
+				
 			}
 
 		} else {
@@ -238,7 +182,11 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 			TextView tv = (TextView) v;
 			tv.setText(sectionName);
 		} else {
-			rowPanel = (LinearLayout) v;
+			LinearLayout ll = (LinearLayout) v;
+			LinearLayout rowPanel = (LinearLayout) ll.findViewById(R.id.row_item);
+			View divider = ll.findViewById(R.id.row_item_divider);
+			divider.setVisibility(View.VISIBLE);
+
 			// check if this position corresponds to last row
 			boolean isLastRowInSection = isLastRowInSection(position);
 			int positionInSection = positionInSection(position);
@@ -279,6 +227,7 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 			}
 
 			if (isLastRowInSection) {
+				divider.setVisibility(View.INVISIBLE);
 				// check how many items needs to be hidden in last row
 				int sectionCount = sectionCursors.get(sectionName).getCount();
 
@@ -299,21 +248,7 @@ public class SectionedGridViewAdapter extends BaseAdapter implements
 
 		}
 
-		boolean animated = idAnimations.get(position);
-		if (!animated) {
-			Animation existingAnim = v.getAnimation();
-			idAnimations.put(position, true);
-
-			if (existingAnim != null && existingAnim.hasStarted()
-					&& !existingAnim.hasEnded()) {
-				// already animating leave it
-				existingAnim.cancel();
-			} else {
-				Animation a = AnimationUtils.loadAnimation(mContext,
-						R.anim.slide_up_without_rotation);
-				v.startAnimation(a);
-			}
-		}
+		
 		return v;
 	}
 
